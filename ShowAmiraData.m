@@ -2,9 +2,9 @@ cd ("Z:\Josephine\Histo\Cohort_12_33-38\#34\#34_reconstruction")
 clearvars
 
 % load Data
-brain = LoadTiffStack('Brain_stack.tif');
-pom = LoadTiffStack('PO_stack.tif');
-vpm = LoadTiffStack('VPM_stack.tif');
+brain = LoadTiffStack('Brain_stack.tif'); brain = smooth3(brain);
+pom = LoadTiffStack('PO_stack.tif'); pom = smooth3(pom);
+vpm = LoadTiffStack('VPM_stack.tif'); vpm = smooth3(vpm);
 
 % plot Data
 [brain_faces, brain_vertices] = isosurface(brain);
