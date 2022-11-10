@@ -36,19 +36,22 @@ for i = 1:numel(cohort_Data11)
         nan(longest-numel(cohort_Data11(i).dvalues_sta2),1)];
 end
 
-% mean dprime over trial
-dprimetrials_mean11 = mean((horzcat(cohort_Data11.dvalues_sta2)),2,'omitnan');
+% Learning Speed for each Animal + STD & Mean 
+for i = 1:numel(cohort_Data11)
+    y2 = cohort_Data11(i).dvalues_sta2(~isnan(cohort_Data11(i).dvalues_sta2));
+    yval = y2(200:end);
+    offset = min(yval);
+    xval = 1:1:numel(yval);
+    xval = xval+200;
+    [params]=sigm_fit(xval', yval',[],[],0);
+    Qpre_fit = params(1) + (params(2) - params(1))./ (1 + 10.^((params(3) - xval) * params(4)));
+    Qpre_fit = Qpre_fit + offset;
+    cohort_Data11(i).LearningSpeed = find(Qpre_fit>1.65,1)+200;
+end
 
-% get Learning Speed
-y2 = dprimetrials_mean11(~isnan(dprimetrials_mean11));
-yval = y2(200:end);
-offset = min(yval);
-xval = 1:1:numel(yval);
-xval = xval+200;
-[params]=sigm_fit(xval', yval',[],[],0);
-Qpre_fit = params(1) + (params(2) - params(1))./ (1 + 10.^((params(3) - xval) * params(4)));
-Qpre_fit = Qpre_fit + offset;
-Speed11_20 = find(Qpre_fit>1.65,1)+200;
+Speed20 = horzcat(cohort_Data11.LearningSpeed);
+Speed20_std = std(Speed20,0,2,'omitnan');
+Speed20_mean = mean(Speed20,2,'omitnan');
 
 
 %% Cohort 15
@@ -72,19 +75,22 @@ for i = 1:numel(cohort_Data15)
         nan(longest-numel(cohort_Data15(i).dvalues_sta2),1)];
 end
 
-% mean dprime over trial
-dprimetrials_mean15 = mean((horzcat(cohort_Data15.dvalues_sta2)),2,'omitnan');
+% Learning Speed for each Animal + STD & Mean 
+for i = 1:numel(cohort_Data15)
+    y2 = cohort_Data15(i).dvalues_sta2(~isnan(cohort_Data15(i).dvalues_sta2));
+    yval = y2(200:end);
+    offset = min(yval);
+    xval = 1:1:numel(yval);
+    xval = xval+200;
+    [params]=sigm_fit(xval', yval',[],[],0);
+    Qpre_fit = params(1) + (params(2) - params(1))./ (1 + 10.^((params(3) - xval) * params(4)));
+    Qpre_fit = Qpre_fit + offset;
+    cohort_Data15(i).LearningSpeed = find(Qpre_fit>1.65,1)+200;
+end
 
-% get Learning Speed
-y2 = dprimetrials_mean15(~isnan(dprimetrials_mean15));
-yval = y2(200:end);
-offset = min(yval);
-xval = 1:1:numel(yval);
-xval = xval+200;
-[params]=sigm_fit(xval', yval',[],[],0);
-Qpre_fit = params(1) + (params(2) - params(1))./ (1 + 10.^((params(3) - xval) * params(4)));
-Qpre_fit = Qpre_fit + offset;
-Speed15_12 = find(Qpre_fit>1.65,1)+200;
+Speed12 = horzcat(cohort_Data15.LearningSpeed);
+Speed12_std = std(Speed12,0,2,'omitnan');
+Speed12_mean = mean(Speed12,2,'omitnan');
 
 
 %% Cohort 16
@@ -108,50 +114,49 @@ for i = 1:numel(cohort_Data16)
         nan(longest-numel(cohort_Data16(i).dvalues_sta2),1)];
 end
 
-% mean dprime over trial (deltaA = 14)
-C = nan(numel(cohort_Data16(1).dvalues_sta2),3);
+% Learning Speed for each Animal 
+for i = 1:numel(cohort_Data16)
+    y2 = cohort_Data16(i).dvalues_sta2(~isnan(cohort_Data16(i).dvalues_sta2));
+    yval = y2(200:end);
+    offset = min(yval);
+    xval = 1:1:numel(yval);
+    xval = xval+200;
+    [params]=sigm_fit(xval', yval',[],[],0);
+    Qpre_fit = params(1) + (params(2) - params(1))./ (1 + 10.^((params(3) - xval) * params(4)));
+    Qpre_fit = Qpre_fit + offset;
+    cohort_Data16(i).LearningSpeed = find(Qpre_fit>1.65,1)+200;
+end
+
+% STD & Mean for deltaA = 14
+Speed14 = nan(1,3);
 for i = 1:3
-    C_temp = mean((horzcat(cohort_Data16(i).dvalues_sta2)),2,'omitnan');
-    C(:,i) = C_temp;
+    Speed14_temp = cohort_Data16(i).LearningSpeed;
+    Speed14(1,i) = Speed14_temp;
 end
-dprimetrials_mean16_14 = mean(C,2,'omitnan');
+    
+Speed14_std = std(Speed14,0,2,'omitnan');
+Speed14_mean = mean(Speed14,2,'omitnan');
 
-% get Learning Speed (deltaA = 14)
-y2 = dprimetrials_mean16_14(~isnan(dprimetrials_mean16_14));
-yval = y2(200:end);
-offset = min(yval);
-xval = 1:1:numel(yval);
-xval = xval+200;
-[params]=sigm_fit(xval', yval',[],[],0);
-Qpre_fit = params(1) + (params(2) - params(1))./ (1 + 10.^((params(3) - xval) * params(4)));
-Qpre_fit = Qpre_fit + offset;
-Speed16_14 = find(Qpre_fit>1.65,1)+200;
-
-% mean dprime over trial (deltaA = 16)
-C = nan(numel(cohort_Data16(1).dvalues_sta2),3);
+% STD & Mean for deltaA = 16
+Speed16 = nan(1,3);
 for i = 4:6
-    C_temp = mean((horzcat(cohort_Data16(i).dvalues_sta2)),2,'omitnan');
-    C(:,i) = C_temp;
+    Speed16_temp = cohort_Data16(i).LearningSpeed;
+    Speed16(1,i-3) = Speed16_temp;
 end
-dprimetrials_mean16_16 = mean(C,2,'omitnan');
-
-% get Learning Speed (deltaA = 16)
-y2 = dprimetrials_mean16_16(~isnan(dprimetrials_mean16_16));
-yval = y2(200:end);
-offset = min(yval);
-xval = 1:1:numel(yval);
-xval = xval+200;
-[params]=sigm_fit(xval', yval',[],[],0);
-Qpre_fit = params(1) + (params(2) - params(1))./ (1 + 10.^((params(3) - xval) * params(4)));
-Qpre_fit = Qpre_fit + offset;
-Speed16_16 = find(Qpre_fit>1.65,1)+200;
+    
+Speed16_std = std(Speed16,0,2,'omitnan');
+Speed16_mean = mean(Speed16,2,'omitnan');
 
 
 %% Plot Data
 deltaA = [12,14,16,20];
-Speed = [Speed15_12, Speed16_14, Speed16_16, Speed11_20];
+Speed_mean = [Speed12_mean, Speed14_mean, Speed16_mean, Speed20_mean];
+Speed_std = [Speed12_std, Speed14_std, Speed16_std, Speed20_std];
 
-figure; plot(deltaA,Speed,'o')
+figure; errorbar(deltaA,Speed_mean,Speed_std,'LineStyle','none','Marker','o')
+hold on
+plot(speed_all(:,1),speed_all(:,2),'LineStyle','none','Marker','.')
 xlabel('deltaA [mm]')
 ylabel('Learning Speed [Trials]')
 title('Learning Speed per deltaA')
+xlim([10 22])
