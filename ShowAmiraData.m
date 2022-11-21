@@ -7,20 +7,33 @@ close all
 % load Data
 load vpm_pom_coordinates_predictions.mat
 brain = LoadTiffStack('Brain_stack.tif'); brain = smooth3(brain);
+% tetr = LoadTiffStack('Brain_Tetrodes_stack.tif'); tetr = smooth3(brain);
 pom = LoadTiffStack('PO_stack.tif'); pom = smooth3(pom);
 vpm = LoadTiffStack('VPM_stack.tif'); vpm = smooth3(vpm);
+
 
 px2micm = [8.66,8.66, -50];
 % refs = [-748, -902, 8.2]; -> old references
 refs = [-796, -890, 14.2];
-clMap = lines(2);
+clMap = [1,0,0; ...   VPM red  
+        0,1,0];     % POm green
 
-bxOpts = {'Box', 'off', 'Color', 'none'};
+bxOpts = {'Box', 'off', 'Color', 'none', 'Clipping', 'off'};
+pcOpts = {'EdgeColor', 'none', 'FaceAlpha', 0.3, 'FaceColor'};
+x2m = @(x) x.vertices .* px2micm + refs.*px2micm;
+
 %% Transform pixels to micrometers and reduce polygon faces
+brain_struct = isosurface(brain);
+brain_patch = reducepatch(brain_struct);
+brain_patch.vertices = x2m(brain_patch);
 
-% plot 3D brain     
-figure('Name', '3D model and predictions','Color','w')
+pom_struct = isosurface(pom);
+pom_patch = reducepatch(pom_struct);
+pom_patch.vertices = x2m(pom_patch);
 
+vpm_struct = isosurface(vpm);
+vpm_patch = reducepatch(vpm_struct);
+vpm_patch.vertices = x2m(vpm_patch);
 %% Plot 3D brain     
 fig3d = figure('Name', '3D model and predictions','Color','w');
 ax = axes('Parent', fig3d, 'NextPlot', 'add', bxOpts{:});
