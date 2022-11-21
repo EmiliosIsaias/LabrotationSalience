@@ -22,34 +22,56 @@ bxOpts = {'Box', 'off', 'Color', 'none'};
 figure('Name', '3D model and predictions','Color','w')
 
 %% Plot 3D brain     
+fig3d = figure('Name', '3D model and predictions','Color','w');
+ax = axes('Parent', fig3d, 'NextPlot', 'add', bxOpts{:});
+
+%{
 [brain_faces, brain_vertices] = isosurface(brain);
 brain_vertices_micm = brain_vertices.*px2micm + refs.*px2micm;
 pb = patch('Faces', brain_faces, 'Vertices', brain_vertices_micm);
 pb.EdgeColor = 'none'; pb.FaceAlpha = 0.3;
 hold on
+%}
 
+% pb = patch(ax, brain_patch, pcOpts{:}, 'k');
+
+%{ 
 [pom_faces, pom_vertices] = isosurface(pom);
 pom_vertices_micm = pom_vertices.*px2micm + refs.*px2micm;
 pom_centroid = mean(pom_vertices_micm);
+
+% Plotting the centroid of POm
 scatter3(pom_centroid(1), pom_centroid(2), pom_centroid(3), [], "black", ...
     'filled', 'MarkerEdgeColor','none','MarkerFaceAlpha',0.6)
+
 pp = patch('Faces', pom_faces, 'Vertices', pom_vertices_micm);
 pp.FaceColor = 'g'; pp.EdgeColor = 'none'; pp.FaceAlpha = 0.3;
+%}
 
+pp = patch(ax, pom_patch, pcOpts{:}, 'g');
+
+%{
 [vpm_faces, vpm_vertices] = isosurface(vpm);
 vpm_vertices_micm = vpm_vertices.*px2micm + refs.*px2micm;
 vpm_centroid = mean(vpm_vertices_micm);
+
+% Plotting the centroid of VPM
 scatter3(vpm_centroid(1), vpm_centroid(2), vpm_centroid(3), [], "black", ...
     'filled', 'MarkerEdgeColor','none','MarkerFaceAlpha',0.6)
+
 pv = patch('Faces', vpm_faces, 'Vertices', vpm_vertices_micm);
 pv.FaceColor = 'r'; pv.EdgeColor = 'none'; pv.FaceAlpha = 0.3;
+%}
+
+pv = patch(ax, vpm_patch, pcOpts{:}, 'r');
 
 % Plotting the predictions in the 3D model
-scatter3(-coords(:,1), coords(:,3), coords(:,2), [], clMap(-prediction+2,:), ...
-    'filled', 'MarkerEdgeColor','none','MarkerFaceAlpha',0.6)
+scatter3(ax, -coords(:,1), coords(:,3), coords(:,2), [], ...
+    clMap(-prediction+2,:), 'filled', 'MarkerEdgeColor', 'k', ...
+    'MarkerFaceAlpha', 0.6)
 
 % add labels, legend and title to figure
-lgObj = legend([pp, pv], {'POm', 'VPM'}); set(lgObj, bxOpts{:}, ...
+lgObj = legend(ax, [pp, pv], {'POm', 'VPM'}); set(lgObj, bxOpts{1:4}, ...
     'AutoUpdate', 'off')
 xlabel(ax, 'm/l axis'); ylabel(ax, 'd/v axis'); zlabel(ax, 'a/p axis')
 clr = "{\\color[rgb]{";
