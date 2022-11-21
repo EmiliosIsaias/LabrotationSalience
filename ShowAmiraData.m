@@ -51,8 +51,23 @@ scatter3(-coords(:,1), coords(:,3), coords(:,2), [], clMap(-prediction+2,:), ...
 % add labels, legend and title to figure
 lgObj = legend([pp, pv], {'POm', 'VPM'}); set(lgObj, bxOpts{:}, ...
     'AutoUpdate', 'off')
-xlabel ('m/l axis'); ylabel ('d/v axis'); zlabel('a/p axis')
-title('{\color[rgb]{0, 0.4470, 0.7410}VPM} and {\color[rgb]{0.8500, 0.3250, 0.0980}POm} predictions')
+xlabel(ax, 'm/l axis'); ylabel(ax, 'd/v axis'); zlabel(ax, 'a/p axis')
+clr = "{\\color[rgb]{";
+ttlStr = clr+"%f, %f, %f}VPM} and "+clr+"%f, %f, %f}POm} predictions";
+title(ax, sprintf(ttlStr, clMap'))
+
+origin = [-3, -4.5, -3]*1e3;
+pointing = origin + 1e3;
+
+lineMat = pagemtimes(ones(2,3,3), reshape(origin, [1,1,3]));
+for cp = 1:3
+    lineMat(2,cp,cp) = pointing(cp);
+end
+
+plot3(ax, lineMat(:,:,1), lineMat(:,:,2),lineMat(:,:,3), ...
+    "LineWidth", 1, "Color", "k")
+
+axis equal
 
 %% Save results
 outFig = fullfile('Z:\Josephine', ...
