@@ -54,5 +54,9 @@ lgObj = legend([pp, pv], {'POm', 'VPM'}); set(lgObj, bxOpts{:}, ...
 xlabel ('m/l axis'); ylabel ('d/v axis'); zlabel('a/p axis')
 title('{\color[rgb]{0, 0.4470, 0.7410}VPM} and {\color[rgb]{0.8500, 0.3250, 0.0980}POm} predictions')
 
-set(gca, bxOpts{1:4});
-savefig(gcf, fullfile('Z:\Josephine','3D-brain with vpm and pom predictions.fig'))outFig = fullfile('Z:\Josephine', ...
+%% Save results
+outFig = fullfile('Z:\Josephine', ...
+    '3D-brain with vpm and pom predictions.fig');
+if ~exist(outFig, "file")
+    savefig(gcf, outFig)
+end
