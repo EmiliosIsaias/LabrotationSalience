@@ -1,3 +1,4 @@
+%% INIT
 addpath ('Z:\Josephine\Histo\Cohort_12_33-38\#34\#34_reconstruction')
 addpath ('Z:\Josephine')
 clearvars
@@ -15,10 +16,12 @@ refs = [-796, -890, 14.2];
 clMap = lines(2);
 
 bxOpts = {'Box', 'off', 'Color', 'none'};
+%% Transform pixels to micrometers and reduce polygon faces
 
 % plot 3D brain     
 figure('Name', '3D model and predictions','Color','w')
 
+%% Plot 3D brain     
 [brain_faces, brain_vertices] = isosurface(brain);
 brain_vertices_micm = brain_vertices.*px2micm + refs.*px2micm;
 pb = patch('Faces', brain_faces, 'Vertices', brain_vertices_micm);
@@ -52,4 +55,4 @@ xlabel ('m/l axis'); ylabel ('d/v axis'); zlabel('a/p axis')
 title('{\color[rgb]{0, 0.4470, 0.7410}VPM} and {\color[rgb]{0.8500, 0.3250, 0.0980}POm} predictions')
 
 set(gca, bxOpts{1:4});
-savefig(gcf, fullfile('Z:\Josephine','3D-brain with vpm and pom predictions.fig'))
+savefig(gcf, fullfile('Z:\Josephine','3D-brain with vpm and pom predictions.fig'))outFig = fullfile('Z:\Josephine', ...
